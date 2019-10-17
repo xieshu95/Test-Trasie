@@ -89,7 +89,7 @@ DAISIE_sim_core <- function(
   }
   if (!is.null(Tpars)) {
     return(
-      DAISIE_sim_core_shu(
+      DAISIE_sim_core_trait(
         time = time,
         mainland_n = mainland_n,
         pars = pars,
@@ -253,7 +253,7 @@ DAISIE_sim_core <- function(
 
 
 
-DAISIE_sim_core_shu <- function(
+DAISIE_sim_core_trait <- function(
   time,
   mainland_n,
   pars,
