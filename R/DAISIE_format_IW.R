@@ -157,34 +157,34 @@ Add_brt_table <- function(island)
 {
   island_age <- island[[1]]$island_age
   island_top <- island[[1]]
-
+  
   island_age <- island[[1]]$island_age
-
-
+  
+  
   if (length(island) == 1) {
     brts_table = matrix(ncol = 4, nrow = 1)
     brts_table[1, ] = c(island_age, 0, 0, NA)
     island[[1]]$brts_table <- brts_table
   }else{
-
+    
     island_top = island[[1]]
     island[[1]] = NULL
-
+    
     btimes <- list()
     for (i in 1:length(island))
     {
       btimes[[i]] <- island[[i]]$branching_times[-1]
     }
-
+    
     island = island[rev(order(sapply(btimes, "[", 1)))]
-
+    
     il<-unlist(island)
     stac1s<-which(il[which(names(il) == 'stac')] == '1')
     stac5s<-which(il[which(names(il) == 'stac')] == '5')
     stac1_5s<-sort(c(stac1s,stac5s))
-
+    
     if(length(stac1_5s)!= 0) {
-
+      
       if(length(stac1_5s) == length(island))
       {
         brts_table = matrix(ncol = 4, nrow = 1)
@@ -194,9 +194,9 @@ Add_brt_table <- function(island)
         island_no_stac1or5<-island[-stac1_5s]
       }
     }
-
+    
     if(length(stac1_5s)==0) {island_no_stac1or5<-island}
-
+    
     if(length(island_no_stac1or5)!=0){
       btimes = list()
       for (i in 1:length(island_no_stac1or5)) {
@@ -219,9 +219,9 @@ Add_brt_table <- function(island)
       brts_table = brts_IWK[rev(order(brts_IWK[, 1])), ]
       brts_table = rbind(c(island_age, 0, 0, NA), brts_table)
     }
-
+    
     island_top$brts_table = brts_table
-
+    
     if(length(stac1_5s)!=0){
       for(i in 1:length(stac1_5s)) {
         island[[length(island) + 1]] <- island[[stac1_5s[i]]]
@@ -230,7 +230,7 @@ Add_brt_table <- function(island)
       }
     }
     island <- append(list(island_top), island)}
-
+  
   colnames(island[[1]]$brts_table) = c("brt", "clade", "event", "endemic")
   return(island)
 }
