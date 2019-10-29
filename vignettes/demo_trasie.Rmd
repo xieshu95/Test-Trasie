@@ -28,7 +28,7 @@ Here I create params:
 ```{r}
 n_mainland_species <- 1000
 island_age <- 2
-n_replicates <-200
+n_replicates <-20
 
 clado_rate <- 2 # cladogenesis rate
 ext_rate <- 2 # extinction rate
