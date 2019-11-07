@@ -25,7 +25,7 @@ Here I create params:
 ```{r}
 n_mainland_species <- 50
 island_age <- 2
-n_replicates <- 10
+n_replicates <- 30
 
 clado_rate <- 0.5 # cladogenesis rate
 ext_rate <- 1 # extinction rate
@@ -63,6 +63,7 @@ Tpars_diffM <- create_trait_state_params(
 Here I check TRASIE can create the same simulated rusults as DAISIE using same rate values:
 
 ```{r}
+timestart <- Sys.time()
 set.seed(42)
 DAISIE <- DAISIE_sim( 
   time = island_age,
@@ -139,7 +140,7 @@ Testing the influence of different rates for two states (M = M2)
 ```{r}
 n_mainland_species <- 25
 island_age <- 2
-n_replicates <- 10
+n_replicates <- 100
 
 clado_rate <- 0.5 # cladogenesis rate
 ext_rate <- 1 # extinction rate
@@ -263,6 +264,17 @@ ML_CS_store_params(island_replicates = TRASIE1, pars = pars1)
 
 
 ```{r}
-est_params <- ML_CS_store_params(island_replicates = TRASIE2, pars = pars2)
+est_params <- ML_CS_store_params(island_replicates = TRASIE1, pars = pars1)
 
 ```
+```{r}
+est_params2 <- ML_CS_store_params(island_replicates = TRASIE2, pars = pars2)
+est_params3 <- ML_CS_store_params(island_replicates = TRASIE3, pars = pars3)
+
+```
+
+
+
+
+
+
