@@ -1,5 +1,5 @@
 clado_est <- function(sim_output){
-  est_params <- sim_output[["est_pars"]]
+  est_params <- sim_output[["est_pars_TraiSIE"]]
   lamc <- est_params[,1]
   lamc = as.data.frame(lamc)
   # median_lamc = median(lamc$lamc)
@@ -16,7 +16,7 @@ clado_est <- function(sim_output){
 }
 
 ext_est <- function(sim_output){
-  est_params <- sim_output[["est_pars"]]
+  est_params <- sim_output[["est_pars_TraiSIE"]]
   mu <- est_params[,2]
   mu = as.data.frame(mu)
   ggplot(mu, aes(x=mu)) + 
@@ -30,7 +30,7 @@ ext_est <- function(sim_output){
 }
 
 K_est <- function(sim_output){
-  est_params <- sim_output[["est_pars"]]
+  est_params <- sim_output[["est_pars_TraiSIE"]]
   k <- est_params[,3]
   k = as.data.frame(k)
   ggplot(k, aes(x=k)) + 
@@ -45,7 +45,7 @@ K_est <- function(sim_output){
 
 
 immig_est <- function(sim_output){
-  est_params <- sim_output[["est_pars"]]
+  est_params <- sim_output[["est_pars_TraiSIE"]]
   gamma <- est_params[,4]
   gamma = as.data.frame(gamma)
   ggplot(gamma, aes(x=gamma)) + 
@@ -59,7 +59,7 @@ immig_est <- function(sim_output){
 }
 
 ana_est <- function(sim_output){
-  est_params <- sim_output[["est_pars"]]
+  est_params <- sim_output[["est_pars_TraiSIE"]]
   lama <- est_params[,5]
   lama = as.data.frame(lama)
   ggplot(lama, aes(x=lama)) + 
@@ -73,5 +73,9 @@ ana_est <- function(sim_output){
 }
 
 
-
+# clado_est(out_balance_short)
+# ext_est(out_balance_short)
+# K_est(out_balance_short)
+# immig_est(out_balance_short)
+# ana_est(out_balance_short)
 

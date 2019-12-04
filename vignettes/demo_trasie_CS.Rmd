@@ -23,15 +23,15 @@ I show TRASIE_CS here:
 Here I create params:
 
 ```{r}
-n_mainland_species <- 50
-island_age <- 2
+n_mainland_species <- 200
+island_age <- 4
 n_replicates <- 30
 
-clado_rate <- 0.5 # cladogenesis rate
+clado_rate <- 2 # cladogenesis rate
 ext_rate <- 1 # extinction rate
-clade_carr_cap <- 5 # clade-level carrying capacity
-imm_rate <- 1 # immigration rate
-ana_rate <- 0.5 # anagenesis rate
+clade_carr_cap <- 10 # clade-level carrying capacity
+imm_rate <- 0.1 # immigration rate
+ana_rate <- 1 # anagenesis rate
 
 Tpars_check <- create_trait_state_params(
      trans_rate = 0,
