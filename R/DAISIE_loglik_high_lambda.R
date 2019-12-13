@@ -1,15 +1,15 @@
 DAISIE_loglik_high_lambda = function(pars1,brts,stac)
 {
-   lbrts = length(brts)
+   lbrts = length(brts)   ##3
    if(brts[lbrts] == 0)
    {
        brts = brts[-lbrts]
        lbrts = length(brts)
    }
-   N = lbrts - 1
+   N = lbrts - 1 ##N = 1
    mu = pars1[2]
    gam = pars1[4]
-   brtsdiff = brts - c(brts[2:(N+1)],0)   
+   brtsdiff = brts - c(brts[2:(N+1)],0)   ##3.2719859 0.7280141
    if(stac == 0)
    {
       out = -gam * brts[1]
@@ -21,8 +21,8 @@ DAISIE_loglik_high_lambda = function(pars1,brts,stac)
         log(N) +
         (N - 1) * log(mu) +
         lgamma(N) +
-        - (N - 1) * log(N - 1) +
-        - mu/(N - 1) * sum((1:N)*(0:(N-1)) * brtsdiff[2:(N+1)])
+        - (N - 1) * log(N - 1) +   ###NAN
+        - mu/(N - 1) * sum((1:N)*(0:(N-1)) * brtsdiff[2:(N+1)])    ###NAN
    }
    if(stac == 1 | stac == 3 | stac == 4)
    {

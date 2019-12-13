@@ -294,10 +294,9 @@ DAISIE_loglik_CS_M1 <- DAISIE_loglik <- function(
   #  . stac == 7 : like 3, but with max colonization time
   
   # Stop laa from being inf and return -Inf  
-  if (is.infinite(pars1[5])) {
+  if (is.infinite(pars1[5]) || is.infinite(pars1[2]) || is.infinite(pars1[4])) {
     return(-Inf)
   }
-  
   if(is.na(pars2[4]))
   {
     pars2[4] = 0
@@ -317,15 +316,15 @@ DAISIE_loglik_CS_M1 <- DAISIE_loglik <- function(
   if (is.na(island_ontogeny)) # This calls the old code that doesn't expect 
     # ontogeny
   {
-    lac = pars1[1]
-    mu = pars1[2]
-    K = pars1[3]
+    lac = pars1[1]  ##1
+    mu = pars1[2]  ##Inf
+    K = pars1[3]   ##Inf
     if(ddep == 0)
     {
       K = Inf
     }
-    gam = pars1[4]
-    laa = pars1[5]
+    gam = pars1[4]  ##0.1
+    laa = pars1[5]  ##1
     pars1_in_divdepvec_call <- K
   } else {
     #pars1[1:4] = Apars
@@ -348,7 +347,7 @@ DAISIE_loglik_CS_M1 <- DAISIE_loglik <- function(
     pars1_in_divdepvec_call <- pars1
   }
   
-  brts = -sort(abs(as.numeric(brts)),decreasing = TRUE)
+  brts = -sort(abs(as.numeric(brts)),decreasing = TRUE)   ##brts = c(-4,-0.7280141)   ##brts = -4
   if(length(brts) == 1 & sum(brts == 0) == 1)
   {
     stop('The branching times contain only a 0. This means the island emerged at the present which is not allowed.');
@@ -357,7 +356,7 @@ DAISIE_loglik_CS_M1 <- DAISIE_loglik <- function(
   }
   if(sum(brts == 0) == 0)
   {
-    brts[length(brts) + 1] = 0
+    brts[length(brts) + 1] = 0   ##brts = c(-4,-0.7280141,0)   ##brts = c(-4,0)
   }
   # for stac = 0, brts will contain origin of island and 0; length = 2; no. species should be 0
   # for stac = 1, brts will contain origin of island, maximum colonization time (usually island age) and 0; length = 3; no. species should be 1
@@ -369,8 +368,8 @@ DAISIE_loglik_CS_M1 <- DAISIE_loglik <- function(
   # for stac = 7, brts will contain origin of island, maximum colonization time (usually island age), branching times and 0; number of species should be no. branching times + 2
   S = 0 * (stac == 0) + (stac == 1 || stac == 4 || stac == 5) + (length(brts) - 2) * (stac == 2) + (length(brts) - 1) * (stac == 3) + (length(brts) - 2) * (stac == 6) + (length(brts) - 1) * (stac == 7)
   #S = length(brts) - (stac %% 2 == 1) - 2 * (stac %% 2 == 0) # old code before introduction of stac 6 and 7
-  S2 = S - (stac == 1) - (stac == 3) - (stac == 4) - (stac == 7)
-  loglik = -lgamma(S2 + missnumspec + 1) + lgamma(S2 + 1) + lgamma(missnumspec + 1)
+  S2 = S - (stac == 1) - (stac == 3) - (stac == 4) - (stac == 7)   ##S = 1, S2 = 1
+  loglik = -lgamma(S2 + missnumspec + 1) + lgamma(S2 + 1) + lgamma(missnumspec + 1)  ##loglik = 0
   if(min(pars1) < 0)
   {
     cat('One or more parameters are negative.\n')
@@ -386,7 +385,7 @@ DAISIE_loglik_CS_M1 <- DAISIE_loglik <- function(
     }
     loglik = -Inf
     return(loglik)
-  }
+  }   ##loglik = 0
   if(lac == Inf & missnumspec == 0 & length(pars1) == 5)
   {
     loglik = DAISIE_loglik_high_lambda(pars1,-brts,stac)
@@ -404,7 +403,13 @@ DAISIE_loglik_CS_M1 <- DAISIE_loglik <- function(
       probs[1] = 1
       k1 = 0
       #y = deSolve::ode(probs,brts[1:2],DAISIE_loglik_rhs,c(pars1,k1,ddep),rtol = reltolint,atol = abstolint,method = methode)
-      y = DAISIE_integrate(probs,brts[1:2],DAISIE_loglik_rhs,c(pars1,k1,ddep),rtol = reltolint,atol = abstolint,method = methode)
+      y = DAISIE_integrate(initprobs = probs,        ####exist error!!!####
+                           tvec = brts[1:2],
+                           rhs_func = DAISIE_loglik_rhs,
+                           pars = c(pars1,k1,ddep),
+                           rtol = reltolint,
+                           atol = abstolint,
+                           method = methode)
       probs = y[2,2:(2 * lx + 2)]
       cp = checkprobs(lv = 2 * lx, loglik, probs, verbose); loglik = cp[[1]]; probs = cp[[2]]      
       if(stac == 0)
@@ -762,11 +767,11 @@ DAISIE_loglik_CS <- DAISIE_loglik_all <- function(
     loglik = datalist[[1]]$not_present_type1 * logp0_type1 + datalist[[1]]$not_present_type2 * logp0_type2
     logcond = (cond == 1) * log(1 - exp((datalist[[1]]$not_present_type1 + numimm_type1) * logp0_type1 + (datalist[[1]]$not_present_type2 + numimm_type2) * logp0_type2))
   }
-  loglik = loglik - logcond
+  loglik = loglik - logcond   ## loglik = -64.4
   
   if(length(datalist) > 1)
   {
-    for(i in 2:length(datalist))
+    for(i in 2:length(datalist))   ##i = 14
     {
       if(datalist[[i]]$type1or2 == 1)
       {
@@ -774,7 +779,15 @@ DAISIE_loglik_CS <- DAISIE_loglik_all <- function(
       } else {
         pars = pars1[6:10]
       }
-      loglik = loglik + DAISIE_loglik_CS_choice(pars1 = pars,pars2 = pars2,brts = datalist[[i]]$branching_times,stac = datalist[[i]]$stac,missnumspec = datalist[[i]]$missing_species,methode = methode,CS_version = CS_version,abstolint = abstolint,reltolint = reltolint)
+      loglik = loglik + DAISIE_loglik_CS_choice(pars1 = pars,
+                                                pars2 = pars2,
+                                                brts = datalist[[i]]$branching_times,
+                                                stac = datalist[[i]]$stac,
+                                                missnumspec = datalist[[i]]$missing_species,
+                                                methode = methode,
+                                                CS_version = CS_version,
+                                                abstolint = abstolint,
+                                                reltolint = reltolint)
     }
   }
   return(loglik)
@@ -794,9 +807,9 @@ DAISIE_integrate_const <- function(initprobs,tvec,rhs_func,pars,rtol,atol,method
 {
   if(as.character(body(rhs_func)[3]) == "lx <- (length(x) - 1)/2")
   {
-    lx <- (length(initprobs) - 1)/2
+    lx <- (length(initprobs) - 1)/2  ##100
     parsvec <- c(DAISIE_loglik_rhs_precomp(pars,lx))
-    y <- DAISIE_ode_FORTRAN(initprobs,tvec,parsvec,atol,rtol,method,runmod = "daisie_runmod")
+    y <- DAISIE_ode_FORTRAN(initprobs,tvec,parsvec,atol,rtol,method,runmod = "daisie_runmod")   ####error!!####
   } else if(as.character(body(rhs_func)[3]) == "lx <- (length(x))/3")
   {
     lx <- (length(initprobs))/3
@@ -824,7 +837,7 @@ DAISIE_ode_FORTRAN <- function(
   kk <- parsvec[length(parsvec)]
   if(runmod == "daisie_runmod")
   {
-    lx <- (N - 1)/2
+    lx <- (N - 1)/2  ##100
   } else if(runmod == "daisie_runmod2")
   {
     lx <- N/3
@@ -832,6 +845,6 @@ DAISIE_ode_FORTRAN <- function(
   probs <- deSolve::ode(y = initprobs, parms = c(lx + 0.,kk + 0.), rpar = parsvec[-length(parsvec)], 
                         times = tvec, func = runmod, initfunc = "daisie_initmod", 
                         ynames = c("SV"), dimens = N + 2, nout = 1, outnames = c("Sum"), 
-                        dllname = "DAISIE",atol = atol, rtol = rtol, method = methode)[,1:(N + 1)]
+                        dllname = "DAISIE",atol = atol, rtol = rtol, method = methode)[,1:(N + 1)]   ##lrw = 300000,liw = 300000
   return(probs)
 }

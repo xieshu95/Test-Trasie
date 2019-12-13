@@ -14,6 +14,7 @@ DAISIE_loglik_all_choosepar = function(
   reltolint = 1E-10
   )
 {
+  #cat("trparsopt is", trparsopt, "\n")
    if(sum(idparsnoshift == (6:10)) != 5)
    {
        trpars1 = rep(0,11)
@@ -31,11 +32,12 @@ DAISIE_loglik_all_choosepar = function(
    {
       trpars1[idparsnoshift] = trpars1[idparsnoshift - 5]
    }
-   if(max(trpars1) > 1 | min(trpars1) < 0)
+   if(max(trpars1) > 1 | min(trpars1) < 0)   ## >=1 can work well,but K can be Inf
    {
       loglik = -Inf
    } else {
       pars1 = trpars1/(1 - trpars1)
+      #cat("pars1 is", pars1, "\n")
       if(pars2[6] > 0)
       {
          pars1 = DAISIE_eq(datalist,pars1,pars2[-5])
@@ -62,6 +64,7 @@ DAISIE_loglik_all_choosepar = function(
          loglik = -Inf
       }
    }
+   #cat("loglik is", loglik, "\n")
    return(loglik)
 }
 
@@ -205,7 +208,18 @@ DAISIE_ML1 = function(
   # island_ontogeny <- translate_island_ontogeny(island_ontogeny)
   pars2 = c(res, ddmodel, cond, verbose, island_ontogeny, eqmodel, tol, maxiter, x_E, x_I) 
   optimpars = c(tol,maxiter)
-  initloglik = DAISIE_loglik_all_choosepar(trparsopt = trparsopt,trparsfix = trparsfix,idparsopt = idparsopt,idparsfix = idparsfix,idparsnoshift = idparsnoshift,idparseq = idparseq, pars2 = pars2,datalist = datalist,methode = methode, CS_version = CS_version, abstolint = tolint[1], reltolint = tolint[2])
+  initloglik = DAISIE_loglik_all_choosepar(trparsopt = trparsopt,     ## initloglik = -375.1972
+                                           trparsfix = trparsfix,
+                                           idparsopt = idparsopt,
+                                           idparsfix = idparsfix,
+                                           idparsnoshift = idparsnoshift,
+                                           idparseq = idparseq, 
+                                           pars2 = pars2,
+                                           datalist = datalist,
+                                           methode = methode, 
+                                           CS_version = CS_version, 
+                                           abstolint = tolint[1], 
+                                           reltolint = tolint[2])
   cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
   if(initloglik == -Inf)
   {

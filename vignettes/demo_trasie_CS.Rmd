@@ -23,11 +23,11 @@ I show TRASIE_CS here:
 Here I create params:
 
 ```{r}
-n_mainland_species <- 200
+n_mainland_species <- 50
 island_age <- 4
-n_replicates <- 30
+n_replicates <- 1
 
-clado_rate <- 2 # cladogenesis rate
+clado_rate <- 0.5 # cladogenesis rate
 ext_rate <- 1 # extinction rate
 clade_carr_cap <- 10 # clade-level carrying capacity
 imm_rate <- 0.1 # immigration rate
@@ -67,7 +67,7 @@ set.seed(42)
 DAISIE <- DAISIE_sim( 
   time = island_age,
   M = n_mainland_species, 
-  pars = c(clado_rate, ext_rate, clade_carr_cap*2, imm_rate, ana_rate),
+  pars = c(clado_rate, ext_rate, clade_carr_cap, imm_rate, ana_rate),
   replicates = n_replicates,
   Tpars = NULL,    ##  DAISIE only considering one trait states, so Tpars = NULL
   plot_sims = FALSE,
@@ -80,7 +80,7 @@ set.seed(42)   ## pars is empty, Tpars use same rate values
 TRASIE_check <- DAISIE_sim( 
   time = island_age,
   M = 0, 
-  pars = c(0, 0, clade_carr_cap*2, 0, 0),
+  pars = c(0, 0, clade_carr_cap, 0, 0),
   replicates = n_replicates,
   Tpars = Tpars_check,   ## all species on mainland with state 2
   plot_sims = FALSE,
@@ -93,7 +93,7 @@ set.seed(42)
 TRASIE_same <- DAISIE_sim( 
   time = island_age,
   M = n_mainland_species * 0.5, 
-  pars = c(clado_rate, ext_rate, clade_carr_cap*2, imm_rate, ana_rate),
+  pars = c(clado_rate, ext_rate, clade_carr_cap, imm_rate, ana_rate),
   replicates = n_replicates,
   Tpars = Tpars_same,   ## all species on mainland with state 2
   plot_sims = FALSE,
@@ -106,7 +106,7 @@ set.seed(42)
 TRASIE_diffM <- DAISIE_sim( 
   time = island_age,
   M = n_mainland_species * 0.9, 
-  pars = c(clado_rate, ext_rate, clade_carr_cap*2, imm_rate, ana_rate),
+  pars = c(clado_rate, ext_rate, clade_carr_cap, imm_rate, ana_rate),
   replicates = n_replicates,
   Tpars = Tpars_diffM,   ## all species on mainland with state 2
   plot_sims = FALSE,
